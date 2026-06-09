@@ -5,14 +5,31 @@
 
 // Charger les fichiers de configuration
 require_once __DIR__ . '/app.php';
-require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/Router.php';
 
 // Auto-loading des classes
 spl_autoload_register(function ($class) {
+    // Charger les Middleware en priorité
+    if ($class === 'AuthMiddleware') {
+        $file = ROOT_PATH . 'app/Middleware/AuthMiddleware.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+    
+    if ($class === 'PermissionMiddleware') {
+        $file = ROOT_PATH . 'app/Middleware/PermissionMiddleware.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+    
     // Charger BaseController en priorité
     if ($class === 'BaseController') {
-        $file = ROOT_PATH . 'app/Controllers/BaseController.php';
+        $file = ROOT_PATH . 'app/Controllers/baseController.php';
         if (file_exists($file)) {
             require_once $file;
             return;
